@@ -44,12 +44,22 @@ Execute all processes as per assigned priority
 
  */
 
+const int MAX_PROCESS = 20;
+//A process
 struct process {
 	float executionTime=0;
 	float priority=0;
 	float arrivalTime=0;
 };
+ //The maxium number of processes that can exist to processed at a time
+process processList[MAX_PROCESS];
+int compare(const void * a, const void * b) {
+	{
+		return (*(int*)a - *(int*)b);
+	}
+}
 
+/*This class deals with calculating process priority as well has containg the ranges as to which a process can affiliate with a range*/
 class priority_calc {
 public:
 	float new_priority(process);
@@ -62,6 +72,72 @@ public:
 	int veryLow = 0;
 };
 
+/*This class is deals with sorting processes and examining how frequently processes come in at the same time*/
+class arrival_time {
+	
+	void same_arrival_freq();
+};
+
+class quick_sort : public arrival_time {
+	void swap(process&, process&);
+	int partition(int, int);
+	int random_pivot(int, int);
+	int sort(int, int);
+	void set_equal(process&,process&);
+};
+void quick_sort::set_equal(process & a, process & b) {
+	a.arrivalTime = b.arrivalTime;
+	a.executionTime = b.executionTime;
+	a.priority = b.priority;
+}
+void quick_sort::swap(process & a, process & b) {
+	process temp;
+	set_equal(temp,a);
+	set_equal(a, b);
+	set_equal(b, temp);
+}
+
+int quick_sort::partition(int low, int high) {
+	int pivot, index, i;
+	index = low;
+	pivot = high;
+
+	for (i = low; i < high; i++)
+	{
+		if (processList[i].arrivalTime < processList[pivot].arrivalTime) {
+			swap(processList[i], processList[pivot]);
+			index++;
+		}
+	}
+	swap(processList[pivot], processList[index]);
+	return index;
+}
+
+int quick_sort::random_pivot(int low, int high) {
+	int pvt, n, temp;
+	n = rand();
+	pvt = low + n % (high - low + 1);
+
+	swap(processList[high], processList[pvt]);
+
+	return partition(low, high);
+}
+
+int quick_sort::sort(int low, int high) {
+	int pindex;
+	if (low < high)
+	{
+		pindex = random_pivot(low, high);
+		sort(low, pindex - 1);
+		sort(pindex + 1, high);
+	}
+}
+
+/*This is the fuzzy calculation of the priority of a process. Processes that have lower execution times are given higher priority generally.
+The calculation of the new priority is based off of two things: the previous priority of the process and the execution time that the process
+needs to finish. Calculating the priority is done by assigning a random priority number that exists in the zone where the process belongs 
+(verylow,low,medium,high,veryhigh). The numbers are in the range of 0-25 and are split into 5 equal sections where veryhigh is equivilant
+to a priority of the range 20-25.*/
 float priority_calc::new_priority(process newProcess) {
 	if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < low) {
 		return newProcess.priority = (rand() % max - veryHigh + 1) + max;
@@ -138,6 +214,12 @@ float priority_calc::new_priority(process newProcess) {
 	if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
 		return newProcess.priority = (rand() % medium - low) + medium;
 	}
+
+}
+
+
+//Calculating the frequency at which a process can
+void arrival_time::same_arrival_freq() {
 
 }
 
