@@ -2,7 +2,7 @@
 #include<cstdlib>
 
 
-
+using namespace std;
 /*Heres the process I want to do. 
 First i will initialize some processes with random numbers between one and ten for their
 executionTime, priority, and arrivaltime
@@ -44,15 +44,16 @@ Execute all processes as per assigned priority
 
  */
 
-const int MAX_PROCESS = 20;
+const int MAX_PROCESS = 5;
 //A process
 struct process {
-	float executionTime=0;
-	float priority=0;
-	float arrivalTime=0;
+	int executionTime=0;
+	int priority=0;
+	int arrivalTime=0;
 };
  //The maxium number of processes that can exist to processed at a time
 process processList[MAX_PROCESS];
+
 int compare(const void * a, const void * b) {
 	{
 		return (*(int*)a - *(int*)b);
@@ -62,7 +63,7 @@ int compare(const void * a, const void * b) {
 /*This class deals with calculating process priority as well has containg the ranges as to which a process can affiliate with a range*/
 class priority_calc {
 public:
-	float new_priority(process);
+	int new_priority(process);
 
 	int max = 25;
 	int veryHigh = 20;
@@ -73,28 +74,45 @@ public:
 };
 
 /*This class is deals with sorting processes and examining how frequently processes come in at the same time*/
-class arrival_time {
-	
-	void same_arrival_freq();
-};
 
-class quick_sort : public arrival_time {
-	void swap(process&, process&);
+
+class quick_sort {
+public:
+
+	void swap(process*, process*);
 	int partition(int, int);
 	int random_pivot(int, int);
-	int sort(int, int);
-	void set_equal(process&,process&);
+	void sort(int, int);
+	void set_equal(process*,process*);
 };
-void quick_sort::set_equal(process & a, process & b) {
-	a.arrivalTime = b.arrivalTime;
-	a.executionTime = b.executionTime;
-	a.priority = b.priority;
+
+class arrival_time : public quick_sort {
+public:
+
+	void same_arrival_freq();
+};
+void quick_sort::set_equal(process * a, process * b) {
+	a->arrivalTime = b->arrivalTime;
+	a->executionTime = b->executionTime;
+	a->priority = b->priority;
 }
-void quick_sort::swap(process & a, process & b) {
+
+void quick_sort::swap(process * a, process * b) {
 	process temp;
-	set_equal(temp,a);
-	set_equal(a, b);
-	set_equal(b, temp);
+
+	
+	temp.arrivalTime = a->arrivalTime;
+	temp.executionTime = a->executionTime;
+	temp.priority = a->priority;
+
+	a->arrivalTime = b->arrivalTime;
+	a->executionTime = b->executionTime;
+	a->priority = b->priority;
+
+	b->arrivalTime = temp.arrivalTime;
+	b->executionTime = temp.executionTime;
+	b->priority = temp.priority;
+
 }
 
 int quick_sort::partition(int low, int high) {
@@ -105,29 +123,28 @@ int quick_sort::partition(int low, int high) {
 	for (i = low; i < high; i++)
 	{
 		if (processList[i].arrivalTime < processList[pivot].arrivalTime) {
-			swap(processList[i], processList[pivot]);
+			swap(&processList[i], &processList[index]);
 			index++;
 		}
 	}
-	swap(processList[pivot], processList[index]);
+	swap(&processList[pivot], &processList[index]);
 	return index;
 }
 
 int quick_sort::random_pivot(int low, int high) {
-	int pvt, n, temp;
+	int pvt, n;
 	n = rand();
 	pvt = low + n % (high - low + 1);
-
-	swap(processList[high], processList[pvt]);
+	swap(&processList[high], &processList[pvt]);
 
 	return partition(low, high);
 }
 
-int quick_sort::sort(int low, int high) {
+void quick_sort::sort(int low, int high) {
 	int pindex;
 	if (low < high)
 	{
-		pindex = random_pivot(low, high);
+	    pindex = random_pivot(low, high);
 		sort(low, pindex - 1);
 		sort(pindex + 1, high);
 	}
@@ -138,7 +155,7 @@ The calculation of the new priority is based off of two things: the previous pri
 needs to finish. Calculating the priority is done by assigning a random priority number that exists in the zone where the process belongs 
 (verylow,low,medium,high,veryhigh). The numbers are in the range of 0-25 and are split into 5 equal sections where veryhigh is equivilant
 to a priority of the range 20-25.*/
-float priority_calc::new_priority(process newProcess) {
+int priority_calc::new_priority(process newProcess) {
 	if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < low) {
 		return newProcess.priority = (rand() % max - veryHigh + 1) + max;
 	}
@@ -215,6 +232,8 @@ float priority_calc::new_priority(process newProcess) {
 		return newProcess.priority = (rand() % medium - low) + medium;
 	}
 
+	return -1;
+
 }
 
 
@@ -223,12 +242,32 @@ void arrival_time::same_arrival_freq() {
 
 }
 
-using namespace std;
+
 int main() {
 	priority_calc obj;
-	process test;
+	process test1,test2,test3,test4,test5;
+	arrival_time thing;
+	
+	
+	test1.arrivalTime = 2;
+	test2.arrivalTime = 4;
+	test3.arrivalTime = 3;
+	test4.arrivalTime = 1;
+	test5.arrivalTime = 5;
+	
+	processList[0] = test1;
+	processList[1] = test2;
+	processList[2] = test3;
+	processList[3] = test4;
+	processList[4] = test5;
 
-	test.priority = obj.new_priority(test);
-	cout << test.priority;
+	
+	thing.sort(0, 4);
+	
+
+	for (int i = 0; i < 5; i++) {
+		cout << processList[i].arrivalTime;
+	}
+	
 
 }
