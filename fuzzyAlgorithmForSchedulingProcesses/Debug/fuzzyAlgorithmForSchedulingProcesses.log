@@ -1,0 +1,5 @@
+﻿  Fuzzy.cpp
+c:\users\haden\onedrive\documents\github\330project2\fuzzyalgorithmforschedulingprocesses\fuzzy.cpp(67): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\haden\onedrive\documents\github\330project2\fuzzyalgorithmforschedulingprocesses\fuzzy.cpp(71): warning C4715: 'priority_calc::new_priority': not all control paths return a value
+  fuzzyAlgorithmForSchedulingProcesses.vcxproj -> C:\Users\haden\OneDrive\Documents\GitHub\330project2\fuzzyAlgorithmForSchedulingProcesses\Debug\fuzzyAlgorithmForSchedulingProcesses.exe
+  fuzzyAlgorithmForSchedulingProcesses.vcxproj -> C:\Users\haden\OneDrive\Documents\GitHub\330project2\fuzzyAlgorithmForSchedulingProcesses\Debug\fuzzyAlgorithmForSchedulingProcesses.pdb (Full PDB)
