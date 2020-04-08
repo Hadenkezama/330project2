@@ -1,6 +1,8 @@
 #include<iostream>
 #include<cstdlib>
-
+#include <time.h>
+#include <Windows.h>
+#include <string>
 
 using namespace std;
 /*Heres the process I want to do. 
@@ -50,6 +52,7 @@ struct process {
 	int executionTime=0;
 	int priority=0;
 	int arrivalTime=0;
+	int id =0;
 };
  //The maxium number of processes that can exist to processed at a time
 process processList[MAX_PROCESS];
@@ -64,7 +67,7 @@ int compare(const void * a, const void * b) {
 class priority_calc {
 public:
 	int new_priority(process);
-
+	int highest_priority_calc_execute();
 	int max = 25;
 	int veryHigh = 20;
 	int high = 15;
@@ -144,6 +147,8 @@ void quick_sort::sort(int low, int high) {
 		sort(pindex + 1, high);
 	}
 }
+
+
 
 /*This is the fuzzy calculation of the priority of a process. Processes that have lower execution times are given higher priority generally.
 The calculation of the new priority is based off of two things: the previous priority of the process and the execution time that the process
@@ -249,6 +254,32 @@ int arrival_time::same_arrival_freq() {
 
 	return x;
 
+}
+
+int priority_calc::highest_priority_calc_execute() {
+	bool flag = true;
+	int i;
+	string newPro;
+	process potentialNew;
+
+	
+		 while (i < MAX_PROCESS){
+			cout << "Executing process id: " << processList[i].id << endl;
+			cout << "Process execution time remaining: " << processList[i].executionTime << endl;
+			Sleep(1000);
+			processList[i].executionTime--;
+
+			if (processList[i].executionTime == 0) {
+				i++;
+			}
+		}
+		
+		
+
+		
+			
+		
+	
 }
 
 
