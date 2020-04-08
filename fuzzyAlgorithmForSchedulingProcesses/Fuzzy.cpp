@@ -83,19 +83,14 @@ public:
 	int partition(int, int);
 	int random_pivot(int, int);
 	void sort(int, int);
-	void set_equal(process*,process*);
 };
 
 class arrival_time : public quick_sort {
 public:
 
-	void same_arrival_freq();
+	int same_arrival_freq();
 };
-void quick_sort::set_equal(process * a, process * b) {
-	a->arrivalTime = b->arrivalTime;
-	a->executionTime = b->executionTime;
-	a->priority = b->priority;
-}
+
 
 void quick_sort::swap(process * a, process * b) {
 	process temp;
@@ -238,7 +233,21 @@ int priority_calc::new_priority(process newProcess) {
 
 
 //Calculating the frequency at which a process can
-void arrival_time::same_arrival_freq() {
+int arrival_time::same_arrival_freq() {
+	int x = 0;
+
+	for (int i = 0; i < MAX_PROCESS; i++) {
+		if (processList[i].arrivalTime == processList[i + 1].arrivalTime) {
+			x++;
+			while (processList[i].arrivalTime == processList[i + 1].arrivalTime) {
+				i++;
+			}
+			i++;
+		}
+		else i++;
+	}
+
+	return x;
 
 }
 
@@ -251,7 +260,7 @@ int main() {
 	
 	test1.arrivalTime = 2;
 	test2.arrivalTime = 4;
-	test3.arrivalTime = 3;
+	test3.arrivalTime = 2;
 	test4.arrivalTime = 1;
 	test5.arrivalTime = 5;
 	
