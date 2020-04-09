@@ -1,10 +1,15 @@
+
 #include "fuzzy.h"
 
+int compare(const void * a, const void * b) {
+	{
+		return (*(int*)a - *(int*)b);
+	}
+}
 
 void quick_sort::swap(process * a, process * b) {
 	process temp;
 
-	
 	temp.arrivalTime = a->arrivalTime;
 	temp.executionTime = a->executionTime;
 	temp.priority = a->priority;
@@ -59,7 +64,7 @@ int quick_sort::priority_pivot(int low, int high, process list[]) {
 	pvt = low + n % (high - low + 1);
 	swap(&list[high], &list[pvt]);
 
-	return priority_partition(low, high);
+	return priority_partition(low, high,list);
 }
 
 int quick_sort::arrival_pivot(int low, int high, process list[]) {
@@ -68,7 +73,7 @@ int quick_sort::arrival_pivot(int low, int high, process list[]) {
 	pvt = low + n % (high - low + 1);
 	swap(&list[high], &list[pvt]);
 
-	return arrival_partition(low, high);
+	return arrival_partition(low, high,list);
 }
 
 void quick_sort::arrival_sort(int low, int high, process list[]) {
@@ -182,27 +187,38 @@ int priority_calc::new_priority(process newProcess) {
 
 //Calculating the frequency at which a process can
 int arrival_time::same_arrival_freq(int min, process list[]) {
-	
+	int i = 0;
 			
 	while (list[min].arrivalTime == list[min + 1].arrivalTime) {
-			min++;
+		min++;
+		i++;
 		}
-			min++;
+			i++;
 
-	return min;
+	return i;
 
 }
 
 void priority_calc::highest_priority_calc_execute(process list[]) {
-	int i, x = 0;
+	int i = 0, x = 0, placeHolder = 0;
 	arrival_time obj;
 	arrival_sort(0, 4,list);
-	
-	x = obj.same_arrival_freq(x,list);
 
-	process *temp = new process[x];
+	for (int j = 0; j < MAX_PROCESS; j++) {
+		x = obj.same_arrival_freq(x, list);
+		process *temp = new process[x];
+		placeHolder = x;
+		for (int k = 0; k < x; k++) {
+			temp[k] = list[placeHolder];
+			placeHolder++;
+		}
+		
+		priority_sort(0, x - 1, temp);
+		for (int t = 0; t < x; t++) {
+			list[t + x] = temp[t];
+		}
 
-	priority_sort(0, x,list);
+	}
 
 
 		 while (i < MAX_PROCESS){
