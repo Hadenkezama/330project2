@@ -42,7 +42,7 @@ public:
 /*This class deals with calculating process priority as well has containg the ranges as to which a process can affiliate with a range*/
 class priority_calc : public quick_sort {
 public:
-	int new_priority(process);
+	void new_priority(process&);
 	void highest_priority_calc_execute(process[]);
 	int max = 25;
 	int veryHigh = 20;

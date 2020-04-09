@@ -13,14 +13,17 @@ void quick_sort::swap(process * a, process * b) {
 	temp.arrivalTime = a->arrivalTime;
 	temp.executionTime = a->executionTime;
 	temp.priority = a->priority;
+	temp.id = a->id;
 
 	a->arrivalTime = b->arrivalTime;
 	a->executionTime = b->executionTime;
 	a->priority = b->priority;
+	a->id = b->id;
 
 	b->arrivalTime = temp.arrivalTime;
 	b->executionTime = temp.executionTime;
 	b->priority = temp.priority;
+	b->id = temp.id;
 
 }
 
@@ -103,84 +106,88 @@ The calculation of the new priority is based off of two things: the previous pri
 needs to finish. Calculating the priority is done by assigning a random priority number that exists in the zone where the process belongs 
 (verylow,low,medium,high,veryhigh). The numbers are in the range of 0-25 and are split into 5 equal sections where veryhigh is equivilant
 to a priority of the range 20-25.*/
-int priority_calc::new_priority(process newProcess) {
+void priority_calc::new_priority(process & newProcess) {
 	if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < low) {
-		return newProcess.priority = (rand() % max - veryHigh + 1) + max;
+		 newProcess.priority = (rand() % max - veryHigh + 1) + max;
 	}
-	if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < low) {
-		return newProcess.priority = (rand() % max - veryHigh + 1) + max;
+	else if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < low) {
+		 newProcess.priority = (rand() % max - veryHigh + 1) + max;
 	}
-	if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < low) {
-		return newProcess.priority = (rand() % max - veryHigh + 1) + max;
+	else if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < low) {
+		 newProcess.priority = (rand() % max - veryHigh + 1) + max;
 	}
-	if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < low) {
-		return newProcess.priority = (rand() % max - veryHigh + 1) + max;
+	else if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < low) {
+		 newProcess.priority = (rand() % max - veryHigh + 1) + max;
 	}
-	if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < low) {
-		return newProcess.priority = (rand() % max - veryHigh + 1) + max;
+	else if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < low) {
+		 newProcess.priority = (rand() % max - veryHigh + 1) + max;
 	}
-	if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < medium && newProcess.executionTime >= low) {
-		return newProcess.priority = (rand() % high - medium + 1) + high;
+	else if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < medium && newProcess.executionTime >= low) {
+		 newProcess.priority = (rand() % high - medium + 1) + high;
 	}
-	if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < medium && newProcess.executionTime >= low) {
-		return newProcess.priority = (rand() % high - medium + 1) + high;
+	else if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < medium && newProcess.executionTime >= low) {
+		 newProcess.priority = (rand() % high - medium + 1) + high;
 	}
-	if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < medium && newProcess.executionTime >= low) {
-		return newProcess.priority = (rand() % veryHigh - high + 1) + veryHigh;
+	else if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < medium && newProcess.executionTime >= low) {
+		 newProcess.priority = (rand() % veryHigh - high + 1) + veryHigh;
 	}
-	if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < medium && newProcess.executionTime >= low) {
-		return newProcess.priority = (rand() % veryHigh - high+ 1) + veryHigh;
+	else if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < medium && newProcess.executionTime >= low) {
+		 newProcess.priority = (rand() % veryHigh - high+ 1) + veryHigh;
 	}
-	if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < medium && newProcess.executionTime >= low) {
-		return newProcess.priority = (rand() % max - veryHigh + 1) + max;
+	else if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < medium && newProcess.executionTime >= low) {
+		 newProcess.priority = (rand() % max - veryHigh + 1) + max;
 	}
-	if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < high && newProcess.executionTime >= medium) {
-		return newProcess.priority = (rand() % low - veryLow + 1) + low;
+	else if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < high && newProcess.executionTime >= medium) {
+		 newProcess.priority = (rand() % low - veryLow + 1) + low;
 	}
-	if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < high && newProcess.executionTime >= medium) {
-		return newProcess.priority = (rand() % medium - low + 1) + medium;
+	else if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < high && newProcess.executionTime >= medium) {
+		 newProcess.priority = (rand() % medium - low + 1) + medium;
 	}
-	if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < high && newProcess.executionTime >= medium) {
-		return newProcess.priority = (rand() % high - medium + 1) + high;
+	else if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < high && newProcess.executionTime >= medium) {
+		 newProcess.priority = (rand() % high - medium + 1) + high;
 	}
-	if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < high && newProcess.executionTime >= medium) {
-		return newProcess.priority = (rand() % high - medium + 1) + high;
+	else if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < high && newProcess.executionTime >= medium) {
+		 newProcess.priority = (rand() % high - medium + 1) + high;
 	}
-	if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < high && newProcess.executionTime >= medium) {
-		return newProcess.priority = (rand() % high - medium + 1) + high;
+	else if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < high && newProcess.executionTime >= medium) {
+		 newProcess.priority = (rand() % high - medium + 1) + high;
 	}
-	if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
-		return newProcess.priority = (rand() % low - veryLow) + low;
+	else if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
+		 newProcess.priority = (rand() % low - veryLow) + low;
 	}
-	if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
-		return newProcess.priority = (rand() % low - veryLow) + low;
+	else if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
+		 newProcess.priority = (rand() % low - veryLow) + low;
 	}
-	if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
-		return newProcess.priority = (rand() % medium - low) + medium;
+	else if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
+		 newProcess.priority = (rand() % medium - low) + medium;
 	}
-	if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
-		return newProcess.priority = (rand() % medium - low) + medium;
+	else if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
+		 newProcess.priority = (rand() % medium - low) + medium;
 	}
-	if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
-		return newProcess.priority = (rand() % medium - low) + medium;
+	else if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < veryHigh && newProcess.executionTime >= high) {
+		 newProcess.priority = (rand() % medium - low) + medium;
 	}
-	if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
-		return newProcess.priority = (rand() % low - veryLow) + low;
+	else if (newProcess.priority < low && newProcess.priority >= veryLow && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
+		 newProcess.priority = (rand() % low - veryLow) + low;
 	}
-	if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
-		return newProcess.priority = (rand() % low - veryLow) + low;
+	else if (newProcess.priority < medium && newProcess.priority >= low && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
+		 newProcess.priority = (rand() % low - veryLow) + low;
 	}
-	if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
-		return newProcess.priority = (rand() % low - veryLow) + low;
+	else if (newProcess.priority < high && newProcess.priority >= medium && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
+		 newProcess.priority = (rand() % low - veryLow) + low;
 	}
-	if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
-		return newProcess.priority = (rand() % medium - low) + medium;
+	else if (newProcess.priority < veryHigh && newProcess.priority >= high && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
+		 newProcess.priority = (rand() % medium - low) + medium;
 	}
-	if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
-		return newProcess.priority = (rand() % medium - low) + medium;
+	else if (newProcess.priority <= max && newProcess.priority >= veryHigh && newProcess.executionTime < max && newProcess.executionTime >= veryHigh) {
+		 newProcess.priority = (rand() % medium - low) + medium;
 	}
 
-	return -1;
+	else 
+	{
+		cout << "Error with calculating new priority";
+	}
+	
 
 }
 
@@ -202,6 +209,11 @@ int arrival_time::same_arrival_freq(int min, process list[]) {
 void priority_calc::highest_priority_calc_execute(process list[]) {
 	int i = 0, x = 0, placeHolder = 0;
 	arrival_time obj;
+
+	for (int r = 0; r < MAX_PROCESS; r++) {
+		new_priority(list[r]);
+	}
+
 	arrival_sort(0, 4,list);
 
 	for (int j = 0; j < MAX_PROCESS; j++) {
@@ -217,13 +229,15 @@ void priority_calc::highest_priority_calc_execute(process list[]) {
 		for (int t = 0; t < x; t++) {
 			list[t + x] = temp[t];
 		}
-
+		delete temp;
 	}
 
 
 		 while (i < MAX_PROCESS){
 			cout << "Executing process id: " << list[i].id << endl;
+			cout << "Process priority is: " << list[i].priority << endl;
 			cout << "Process execution time remaining: " << list[i].executionTime << endl;
+			
 			Sleep(1000);
 			list[i].executionTime--;
 
