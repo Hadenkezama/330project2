@@ -1,98 +1,4 @@
-#include<iostream>
-#include<cstdlib>
-#include <time.h>
-#include <Windows.h>
-#include <string>
-
-using namespace std;
-/*Heres the process I want to do. 
-First i will initialize some processes with random numbers between one and ten for their
-executionTime, priority, and arrivaltime
-
-Apply for sorting method on arrival time to arrange in ascending
-order for (i=1; i<n; i++) 
-{ for (j=1; j<n-i; j++) 
-if (ATnj>ATnj+1) 
-swap 
-
-
-Compute the frequency of same arrival time and store in x variable.
-z=1, AT = ATni, x=1 
-for (i=z; a<=n; i++) 
-if (ATni == ATni+1) 
-AT = ATni, x=x+1, z=z+1 
-Else 
-AT1 =AT ni+1, z=z+1 
-Break
-
-Compare New Priority of all the process which is having arrival time 0 and find Highest Priority (HP).   
-HP= NPni  
-for (i=1; i<=x; i++) x is frequency of arrival time 0. 
-if (NPni < NPni+1)   
-HP = NPni+1 
-Execute the process which has Highest Priority.
-
-Execute this process until new process will not enter in queue. 
-for (i=1; i<AT1-AT; i++) 
-Execute P
-
-whenever new process is enter, break executiion of this process
-and then again find highest priority among all entered prcesses
-after entering all processes in queue apply sorting method on
-New priority to arrange in ascending order.
-
-Execute all processes as per assigned priority
-
-
- */
-
-const int MAX_PROCESS = 5;
-//A process
-struct process {
-	int executionTime=0;
-	int priority=0;
-	int arrivalTime=0;
-	int id =0;
-};
- //The maxium number of processes that can exist to processed at a time
-process processList[MAX_PROCESS];
-
-int compare(const void * a, const void * b) {
-	{
-		return (*(int*)a - *(int*)b);
-	}
-}
-
-/*This class deals with calculating process priority as well has containg the ranges as to which a process can affiliate with a range*/
-class priority_calc {
-public:
-	int new_priority(process);
-	int highest_priority_calc_execute();
-	int max = 25;
-	int veryHigh = 20;
-	int high = 15;
-	int medium = 10;
-	int low = 5;
-	int veryLow = 0;
-};
-
-/*This class is deals with sorting processes and examining how frequently processes come in at the same time*/
-
-
-class quick_sort {
-public:
-
-	void swap(process*, process*);
-	int partition(int, int);
-	int random_pivot(int, int);
-	void sort(int, int);
-};
-
-class arrival_time : public quick_sort {
-public:
-
-	int same_arrival_freq();
-};
+#include "fuzzy.h"
 
 
 void quick_sort::swap(process * a, process * b) {
@@ -113,38 +19,75 @@ void quick_sort::swap(process * a, process * b) {
 
 }
 
-int quick_sort::partition(int low, int high) {
+
+
+int quick_sort::arrival_partition(int low, int high, process list[]) {
 	int pivot, index, i;
 	index = low;
 	pivot = high;
 
 	for (i = low; i < high; i++)
 	{
-		if (processList[i].arrivalTime < processList[pivot].arrivalTime) {
-			swap(&processList[i], &processList[index]);
+		if (list[i].arrivalTime < list[pivot].arrivalTime) {
+			swap(&list[i], &list[index]);
 			index++;
 		}
 	}
-	swap(&processList[pivot], &processList[index]);
+	swap(&list[pivot], &list[index]);
 	return index;
 }
 
-int quick_sort::random_pivot(int low, int high) {
+int quick_sort::priority_partition(int low, int high, process list[]) {
+	int pivot, index, i;
+	index = low;
+	pivot = high;
+
+	for (i = low; i < high; i++)
+	{
+		if (list[i].priority < list[pivot].priority) {
+			swap(&list[i], &list[index]);
+			index++;
+		}
+	}
+	swap(&list[pivot], &list[index]);
+	return index;
+}
+
+int quick_sort::priority_pivot(int low, int high, process list[]) {
 	int pvt, n;
 	n = rand();
 	pvt = low + n % (high - low + 1);
-	swap(&processList[high], &processList[pvt]);
+	swap(&list[high], &list[pvt]);
 
-	return partition(low, high);
+	return priority_partition(low, high);
 }
 
-void quick_sort::sort(int low, int high) {
+int quick_sort::arrival_pivot(int low, int high, process list[]) {
+	int pvt, n;
+	n = rand();
+	pvt = low + n % (high - low + 1);
+	swap(&list[high], &list[pvt]);
+
+	return arrival_partition(low, high);
+}
+
+void quick_sort::arrival_sort(int low, int high, process list[]) {
 	int pindex;
 	if (low < high)
 	{
-	    pindex = random_pivot(low, high);
-		sort(low, pindex - 1);
-		sort(pindex + 1, high);
+	    pindex = arrival_pivot(low, high,list);
+		arrival_sort(low, pindex - 1,list);
+		arrival_sort(pindex + 1, high,list);
+	}
+}
+
+void quick_sort::priority_sort(int low, int high, process list[]) {
+	int pindex;
+	if (low < high)
+	{
+		pindex = priority_pivot(low, high,list);
+		priority_sort(low, pindex - 1,list);
+		priority_sort(pindex + 1, high,list);
 	}
 }
 
@@ -238,76 +181,42 @@ int priority_calc::new_priority(process newProcess) {
 
 
 //Calculating the frequency at which a process can
-int arrival_time::same_arrival_freq() {
-	int x = 0;
-
-	for (int i = 0; i < MAX_PROCESS; i++) {
-		if (processList[i].arrivalTime == processList[i + 1].arrivalTime) {
-			x++;
-			while (processList[i].arrivalTime == processList[i + 1].arrivalTime) {
-				i++;
-			}
-			i++;
-		}
-		else i++;
-	}
-
-	return x;
-
-}
-
-int priority_calc::highest_priority_calc_execute() {
-	bool flag = true;
-	int i;
-	string newPro;
-	process potentialNew;
-
+int arrival_time::same_arrival_freq(int min, process list[]) {
 	
-		 while (i < MAX_PROCESS){
-			cout << "Executing process id: " << processList[i].id << endl;
-			cout << "Process execution time remaining: " << processList[i].executionTime << endl;
-			Sleep(1000);
-			processList[i].executionTime--;
-
-			if (processList[i].executionTime == 0) {
-				i++;
-			}
-		}
-		
-		
-
-		
 			
+	while (list[min].arrivalTime == list[min + 1].arrivalTime) {
+			min++;
+		}
+			min++;
+
+	return min;
+
+}
+
+void priority_calc::highest_priority_calc_execute(process list[]) {
+	int i, x = 0;
+	arrival_time obj;
+	arrival_sort(0, 4,list);
+	
+	x = obj.same_arrival_freq(x,list);
+
+	process *temp = new process[x];
+
+	priority_sort(0, x,list);
+
+
+		 while (i < MAX_PROCESS){
+			cout << "Executing process id: " << list[i].id << endl;
+			cout << "Process execution time remaining: " << list[i].executionTime << endl;
+			Sleep(1000);
+			list[i].executionTime--;
+
+			if (list[i].executionTime == 0) {
+				i++;
+			}
+		}
 		
 	
 }
 
 
-int main() {
-	priority_calc obj;
-	process test1,test2,test3,test4,test5;
-	arrival_time thing;
-	
-	
-	test1.arrivalTime = 2;
-	test2.arrivalTime = 4;
-	test3.arrivalTime = 2;
-	test4.arrivalTime = 1;
-	test5.arrivalTime = 5;
-	
-	processList[0] = test1;
-	processList[1] = test2;
-	processList[2] = test3;
-	processList[3] = test4;
-	processList[4] = test5;
-
-	
-	thing.sort(0, 4);
-	
-
-	for (int i = 0; i < 5; i++) {
-		cout << processList[i].arrivalTime;
-	}
-	
-
-}
