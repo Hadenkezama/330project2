@@ -193,7 +193,7 @@ void priority_calc::new_priority(process & newProcess) {
 
 
 //Calculating the frequency at which a process can
-int arrival_time::same_arrival_freq(int min, process list[]) {
+int priority_calc::same_arrival_freq(int min, process list[]) {
 	int i = 0;
 			
 	while (list[min].arrivalTime == list[min + 1].arrivalTime) {
@@ -206,47 +206,160 @@ int arrival_time::same_arrival_freq(int min, process list[]) {
 
 }
 
-void priority_calc::highest_priority_calc_execute(process list[]) {
-	int i = 0, x = 0, placeHolder = 0;
-	arrival_time obj;
+void priority_calc::execute(queue & list) {
+	
+	int i = 0, count = 0, num = 0;
+	string decision;
+	highest_priority_calc(list.arr,list.count);
 
-	for (int r = 0; r < MAX_PROCESS; r++) {
-		new_priority(list[r]);
-	}
+	while (!list.is_empty()) {
+		cout << "Executing process id: " << list.arr[list.front].id << endl;
+		cout << "Process priority is: " << list.arr[list.front].priority << endl;
+		cout << "Process execution time remaining: " << list.arr[list.front].executionTime << endl;
+		Sleep(1000);
 
-	arrival_sort(0, 4,list);
+		list.arr[list.front].executionTime--;
+		count++;
 
-	for (int j = 0; j < MAX_PROCESS; j++) {
-		x = obj.same_arrival_freq(x, list);
-		process *temp = new process[x];
-		placeHolder = x;
-		for (int k = 0; k < x; k++) {
-			temp[k] = list[placeHolder];
-			placeHolder++;
-		}
-		
-		priority_sort(0, x - 1, temp);
-		for (int t = 0; t < x; t++) {
-			list[t + x] = temp[t];
-		}
-		delete temp;
-	}
+		if (list.arr[list.front].executionTime % 10 == 1) {
+			cout << "Do you want to add another process?" << endl;
+			cin >> decision;
+			if (decision == "yes") {
+				cout << "How many processes?";
+				cin >> num;
+				for (int z = 0; z < num; z++) {
+					cout << "A new process is being added to the queue: " << endl;
+					if (list.front != list.capacity) {
+						process *temp = new process;
+						temp->id = list.arr[list.rear].id + 1;
+						temp->arrivalTime = count;
+						cout << "Enter process priority between 0 - 25" << endl;
+						cin >> temp->priority;
+						cout << "Enter process execution time between 0-25" << endl;
+						cin >> temp->executionTime;
+						list.enqueue(*temp);
+						delete temp;
+					}
+				}
 
-
-		 while (i < MAX_PROCESS){
-			cout << "Executing process id: " << list[i].id << endl;
-			cout << "Process priority is: " << list[i].priority << endl;
-			cout << "Process execution time remaining: " << list[i].executionTime << endl;
-			
-			Sleep(1000);
-			list[i].executionTime--;
-
-			if (list[i].executionTime == 0) {
-				i++;
+				highest_priority_calc(list.arr,list.count);
 			}
 		}
 		
+
+		if (list.arr[list.front].executionTime == 0) {
+			if (list.rear != list.front)
+				list.dequeue();
+			else {
+				cout << "All process executed";
+				exit(1);
+			}
+		}
+	}
+	delete list.arr;
+}
+
+void priority_calc::highest_priority_calc(process list[],int count) {
+	int x = 0, placeHolder = 0;
+	quick_sort obj;
+
+	for (int r = 0; r < count; r++) {
+		new_priority(list[r]);
+	}
+
+	obj.arrival_sort(0, count-1, list);
+
+	for (int j = 0; j < count; j++) {
+		x = same_arrival_freq(x, list);
+		if (x > 1) {
+			process *temp = new process[x];
+			if (j == 0) {
+				placeHolder = 0;
+				for (int k = 0; k < x; k++) {
+					temp[k] = list[placeHolder];
+					placeHolder++;
+				}
+				placeHolder--;
+				obj.priority_sort(0, x - 1, temp);
+				for (int t = 0; t < x; t++) {
+					list[t] = temp[placeHolder];
+					placeHolder--;
+
+				}
+				delete temp;
+			}
+
+			else {
+				placeHolder = x;
+				for (int k = 0; k < x; k++) {
+					temp[k] = list[placeHolder];
+					placeHolder++;
+				}
+
+				obj.priority_sort(0, x - 1, temp);
+				for (int t = 0; t < x; x++) {
+					list[t + x] = temp[placeHolder];
+					placeHolder--;
+				}
+				delete temp;
+			}
+		}
+
+		
+	}
 	
 }
 
+queue::queue(int size) {
+	arr = new process[size];
+	capacity = size;
+	front = 0;
+	rear = -1;
+	count = 0;
 
+}
+
+queue::~queue() {
+	delete arr;
+}
+
+void queue::dequeue() {
+	if (is_empty()) {
+		cout << "Queue empty";
+		exit(EXIT_FAILURE);
+	}
+
+	front = (front + 1) % capacity;
+	count--;
+}
+
+void queue::enqueue(process p) {
+	if (is_full()) {
+		cout << "Queue full";
+	}
+
+	rear = (rear + 1) % capacity;
+	arr[rear] = p;
+	count++;
+}
+
+process queue::peek() {
+	if(is_empty())
+	{
+		cout << "Can not peek. Queue empty";
+		exit(EXIT_FAILURE);
+	}
+	return arr[front];
+}
+
+int queue::size() {
+	return count;
+}
+
+bool queue::is_empty() {
+	return (size() == 0);
+}
+
+bool queue::is_full() {
+	return (size() == capacity);
+}

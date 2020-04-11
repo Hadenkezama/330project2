@@ -32,18 +32,36 @@ public:
 	void arrival_sort(int, int, process[]);
 };
 
-class arrival_time : public quick_sort {
-public:
 
-	int same_arrival_freq(int,process[]);
+class queue {
+public:
+	process *arr;
+	int capacity;
+	int front;
+	int rear;
+	int count;
+
+
+	queue(int size = MAX_PROCESS);
+	~queue();
+
+	void dequeue();
+	void enqueue(process);
+	process peek();
+	int size();
+	bool is_empty();
+	bool is_full();
 };
 
 
+
 /*This class deals with calculating process priority as well has containg the ranges as to which a process can affiliate with a range*/
-class priority_calc : public quick_sort {
+class priority_calc {
 public:
 	void new_priority(process&);
-	void highest_priority_calc_execute(process[]);
+	void execute(queue&);
+	void highest_priority_calc(process[],int);
+	int same_arrival_freq(int, process[]);
 	int max = 25;
 	int veryHigh = 20;
 	int high = 15;
