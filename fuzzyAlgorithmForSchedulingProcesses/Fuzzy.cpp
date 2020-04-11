@@ -1,12 +1,13 @@
 
 #include "fuzzy.h"
-
+//Compare two integer values
 int compare(const void * a, const void * b) {
 	{
 		return (*(int*)a - *(int*)b);
 	}
 }
 
+//Swap two processes
 void quick_sort::swap(process * a, process * b) {
 	process temp;
 
@@ -27,8 +28,7 @@ void quick_sort::swap(process * a, process * b) {
 
 }
 
-
-
+/*Swap elements alongth the partition for the quick sort algorithm. This is sorting by arrival time*/
 int quick_sort::arrival_partition(int low, int high, process list[]) {
 	int pivot, index, i;
 	index = low;
@@ -44,7 +44,7 @@ int quick_sort::arrival_partition(int low, int high, process list[]) {
 	swap(&list[pivot], &list[index]);
 	return index;
 }
-
+/*Swap elements along the partition for the quick sort algorithm> This is sorting by priority*/
 int quick_sort::priority_partition(int low, int high, process list[]) {
 	int pivot, index, i;
 	index = low;
@@ -60,7 +60,7 @@ int quick_sort::priority_partition(int low, int high, process list[]) {
 	swap(&list[pivot], &list[index]);
 	return index;
 }
-
+/*pick a pivot for the quick sort algorithm. This is for the priority sorting version of quick sort*/
 int quick_sort::priority_pivot(int low, int high, process list[]) {
 	int pvt, n;
 	n = rand();
@@ -69,7 +69,7 @@ int quick_sort::priority_pivot(int low, int high, process list[]) {
 
 	return priority_partition(low, high,list);
 }
-
+/*pick a pivot for the quick sort algorithm. This for the arrival time sorting version of quick sort*/
 int quick_sort::arrival_pivot(int low, int high, process list[]) {
 	int pvt, n;
 	n = rand();
@@ -78,7 +78,7 @@ int quick_sort::arrival_pivot(int low, int high, process list[]) {
 
 	return arrival_partition(low, high,list);
 }
-
+/*Sort the list based on arrival time*/
 void quick_sort::arrival_sort(int low, int high, process list[]) {
 	int pindex;
 	if (low < high)
@@ -88,7 +88,7 @@ void quick_sort::arrival_sort(int low, int high, process list[]) {
 		arrival_sort(pindex + 1, high,list);
 	}
 }
-
+/*Sort the list based on priortiy of the processes*/
 void quick_sort::priority_sort(int low, int high, process list[]) {
 	int pindex;
 	if (low < high)
@@ -192,7 +192,7 @@ void priority_calc::new_priority(process & newProcess) {
 }
 
 
-//Calculating the frequency at which a process can
+//Calculating the frequency at which a process has the same arrival time
 int priority_calc::same_arrival_freq(int min, process list[]) {
 	int i = 0;
 			
@@ -205,7 +205,11 @@ int priority_calc::same_arrival_freq(int min, process list[]) {
 	return i;
 
 }
-
+/*Execute the processes list using a queue structure. First, sort all the processes based on arrival time and then with priority.
+While their is still processes in the processes list, run through them and execute the first process in the queue. When the execution
+time of the currently executing process reaches 0, then remove it from the queue and move onto the next process in the list.
+When ever an execution time mod(10) = 1 (chosen randomoly, it doesnt matter) prompt the user if they want to add another process.
+If another process is added, sort the list again by arrival time and priority.*/
 void priority_calc::execute(queue & list) {
 	
 	int i = 0, count = 0, num = 0;
@@ -258,7 +262,7 @@ void priority_calc::execute(queue & list) {
 	}
 	delete list.arr;
 }
-
+/*Sort the processes based on their arrival time and their prioritys.*/
 void priority_calc::highest_priority_calc(process list[],int count) {
 	int x = 0, placeHolder = 0;
 	quick_sort obj;
@@ -309,7 +313,7 @@ void priority_calc::highest_priority_calc(process list[],int count) {
 	}
 	
 }
-
+/*Constructor for the queue data structure*/
 queue::queue(int size) {
 	arr = new process[size];
 	capacity = size;
@@ -318,11 +322,11 @@ queue::queue(int size) {
 	count = 0;
 
 }
-
+/*delete the queue array*/
 queue::~queue() {
 	delete arr;
 }
-
+/*remove the front process from the queue*/
 void queue::dequeue() {
 	if (is_empty()) {
 		cout << "Queue empty";
@@ -332,7 +336,7 @@ void queue::dequeue() {
 	front = (front + 1) % capacity;
 	count--;
 }
-
+/*add a process to the back of the queue*/
 void queue::enqueue(process p) {
 	if (is_full()) {
 		cout << "Queue full";
@@ -342,24 +346,15 @@ void queue::enqueue(process p) {
 	arr[rear] = p;
 	count++;
 }
-
-process queue::peek() {
-	if(is_empty())
-	{
-		cout << "Can not peek. Queue empty";
-		exit(EXIT_FAILURE);
-	}
-	return arr[front];
-}
-
+/*return queue size*/
 int queue::size() {
 	return count;
 }
-
+/*check if queue is empty*/
 bool queue::is_empty() {
 	return (size() == 0);
 }
-
+/*Check if the queue is full*/
 bool queue::is_full() {
 	return (size() == capacity);
 }

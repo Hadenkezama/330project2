@@ -1,4 +1,12 @@
 #pragma once
+/*Haden Remoue-Kezama
+200379095
+
+This program is a fuzzy schedular for processes. It first sorts by arrival time and then sorts by the priority of a processes. When a new process is 
+added to the queue, calculate a new priority for each process based on execution time and previous priority. Then resort, all the processes in the 
+queue.
+
+Limitations: There is minimal error checking in this program. It needs to be fine tuned.*/
 #include<iostream>
 #include<cstdlib>
 #include <time.h>
@@ -6,7 +14,7 @@
 #include <string>
 
 using namespace std;
-
+//Maximum number of processes in the queue
 const int MAX_PROCESS = 5;
 
 // A process
@@ -16,10 +24,10 @@ struct process {
 	int arrivalTime = 0;
 	int id = 0;
 };
-//The maxium number of processes that can exist to processed at a time
 
 
 
+//used for sorting the processes by arrival time and by priority
 class quick_sort {
 public:
 
@@ -32,7 +40,7 @@ public:
 	void arrival_sort(int, int, process[]);
 };
 
-
+//class for implementing the queue
 class queue {
 public:
 	process *arr;
@@ -47,7 +55,6 @@ public:
 
 	void dequeue();
 	void enqueue(process);
-	process peek();
 	int size();
 	bool is_empty();
 	bool is_full();
@@ -55,7 +62,7 @@ public:
 
 
 
-/*This class deals with calculating process priority as well has containg the ranges as to which a process can affiliate with a range*/
+/*This class deals with calculating process priority. It also executes the processes and calculates how many processes arrive at the same time*/
 class priority_calc {
 public:
 	void new_priority(process&);
@@ -70,7 +77,7 @@ public:
 	int veryLow = 0;
 };
 
-/*This class is deals with sorting processes and examining how frequently processes come in at the same time*/
+
 
 
 
