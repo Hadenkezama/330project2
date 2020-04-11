@@ -220,7 +220,11 @@ void priority_calc::execute(queue & list) {
 		cout << "Executing process id: " << list.arr[list.front].id << endl;
 		cout << "Process priority is: " << list.arr[list.front].priority << endl;
 		cout << "Process execution time remaining: " << list.arr[list.front].executionTime << endl;
+		#ifdef _WIN32 || _WIN64
 		Sleep(1000);
+		#else
+		sleep(1000);
+		#endif
 
 		list.arr[list.front].executionTime--;
 		count++;

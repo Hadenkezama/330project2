@@ -10,8 +10,17 @@ Limitations: There is minimal error checking in this program. It needs to be fin
 #include<iostream>
 #include<cstdlib>
 #include <time.h>
-#include <Windows.h>
 #include <string>
+
+#ifdef _WIN32|| _WIN64
+#include <Windows.h>
+
+#else
+#include <unistd.h>
+#endif
+
+
+
 
 using namespace std;
 //Maximum number of processes in the queue
